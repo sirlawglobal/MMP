@@ -29,7 +29,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\_index.tsx"
   );
-  import.meta.hot.lastModified = "1750965227006.3364";
+  import.meta.hot.lastModified = "1750986738127.0366";
 }
 var meta = () => {
   return [{
@@ -174,4 +174,4 @@ export {
   Index as default,
   meta
 };
-//# sourceMappingURL=/build/routes/_index-JF64XEV4.js.map
+//# sourceMappingURL=/build/routes/_index-SOSI5LNY.js.map

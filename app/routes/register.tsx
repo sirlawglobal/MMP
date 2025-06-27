@@ -1,7 +1,26 @@
 // app/routes/register.tsx
-import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { json, redirect, type LoaderFunction } from "@remix-run/node";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { registerUser } from "~/utils/auth.server";
+import { getSession } from "~/utils/session.server";
+import { getUserRole } from "~/utils/auth.server";
+
+// 🔒 Page access control
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request);
+  const email = session.get("email");
+
+  if (!email) {
+    return json({ access: "public" }); // Not logged in
+  }
+
+  const role = await getUserRole(email);
+  if (role !== "admin") {
+    return redirect("/dashboard"); // Logged in but not admin
+  }
+
+  return json({ access: "admin" }); // Admin user
+};
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -23,11 +42,15 @@ export async function action({ request }: { request: Request }) {
 
 export default function RegisterPage() {
   const actionData = useActionData<typeof action>();
+  const loaderData = useLoaderData<{ access: "admin" | "public" }>();
+  const isAdmin = loaderData.access === "admin";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded shadow">
-        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          {isAdmin ? "Add New User" : "Register"}
+        </h1>
         <Form method="post" className="space-y-5">
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
@@ -72,15 +95,18 @@ export default function RegisterPage() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
           >
-            Register
+            {isAdmin ? "Add New User" : "Register"}
           </button>
         </Form>
-        <p className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Login here
-          </a>
-        </p>
+
+        {loaderData.access === "public" && (
+          <p className="mt-4 text-center text-sm">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-600 hover:underline">
+              Login here
+            </a>
+          </p>
+        )}
       </div>
     </div>
   );

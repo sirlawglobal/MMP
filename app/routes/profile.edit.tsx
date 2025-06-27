@@ -1,18 +1,17 @@
-// app/routes/profile.edit.tsx
-import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { json, redirect, type LoaderFunction, type ActionFunction } from "@remix-run/node";
+import { Form, useLoaderData, useActionData } from "@remix-run/react";
 import { getSession } from "~/utils/session.server";
 import { getCurrentUser, updateUserProfile } from "~/utils/auth.server";
+import type { User } from "~/utils/auth.server";
 
-const skillsOptions = [
-  "Marketing",
-  "UI/UX",
-  "Product Design",
-  "Software Development",
-  "Business Strategy",
-  "Finance",
-  "Leadership"
-];
+type LoaderData = {
+  user: User;
+};
+
+type ActionData = {
+  success?: boolean;
+  error?: string;
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);
@@ -23,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const user = await getCurrentUser(email);
   if (!user) return redirect("/login");
 
-  return json({ user });
+  return json<LoaderData>({ user });
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -33,106 +32,107 @@ export const action: ActionFunction = async ({ request }) => {
   if (!email) return redirect("/login");
 
   const formData = await request.formData();
-  const profileData = {
-    name: formData.get("name") as string,
-    bio: formData.get("bio") as string,
-    skills: formData.getAll("skills") as string[],
-    goals: (formData.get("goals") as string).split(",").map(g => g.trim()),
-  };
+  const name = formData.get("name") as string;
+  const bio = formData.get("bio") as string;
+  const skills = (formData.get("skills") as string).split(",").map(s => s.trim());
+  const goals = (formData.get("goals") as string).split(",").map(g => g.trim());
 
-  await updateUserProfile(email, profileData);
-  return redirect("/dashboard");
+  const updatedUser = await updateUserProfile(email, {
+    name,
+    bio,
+    skills,
+    goals
+  });
+
+  if (!updatedUser) {
+    return json<ActionData>({ error: "Profile update failed." }, { status: 500 });
+  }
+
+  return json<ActionData>({ success: true });
 };
 
 export default function EditProfile() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<LoaderData>();
+  const actionData = useActionData<ActionData>();
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar - similar to dashboard */}
-      <aside className="w-60 bg-purple-700 text-white flex flex-col p-4">
-        {/* ... same sidebar as dashboard ... */}
-      </aside>
+    // <div className="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <div className="flex justify-center">
+  <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl">
+    <h1 className="text-3xl font-bold text-purple-800 mb-8 text-center">Edit Profile</h1>
 
-      {/* Main content */}
-      <main className="flex-1 p-6">
-        <h1 className="text-xl font-semibold mb-6 text-purple-800">EDIT PROFILE</h1>
-        
-        <Form method="post" className="bg-white rounded-lg p-6 shadow">
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="name">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              defaultValue={user.name}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
+    <Form method="post" className="space-y-6">
+      {/* Name */}
+      <div className="relative">
+        <input
+          name="name"
+          defaultValue={user.name}
+          required
+          className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-purple-600 transition"
+          placeholder="Name"
+        />
+        <label className="absolute left-0 top-1 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1 peer-focus:text-sm peer-focus:text-purple-600">
+          Name
+        </label>
+      </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="bio">
-              Bio
-            </label>
-            <textarea
-              id="bio"
-              name="bio"
-              defaultValue={user.bio}
-              className="w-full p-2 border rounded"
-              rows={3}
-              required
-            />
-          </div>
+      {/* Bio */}
+      <div className="relative">
+        <textarea
+          name="bio"
+          rows={3}
+          defaultValue={user.bio}
+          placeholder="Bio"
+          className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-purple-600 transition resize-none"
+        />
+        <label className="absolute left-0 top-1 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1 peer-focus:text-sm peer-focus:text-purple-600">
+          Bio
+        </label>
+      </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">
-              Skills
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {skillsOptions.map(skill => (
-                <div key={skill} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={`skill-${skill}`}
-                    name="skills"
-                    value={skill}
-                    defaultChecked={user.skills?.includes(skill)}
-                    className="mr-2"
-                  />
-                  <label htmlFor={`skill-${skill}`}>{skill}</label>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* Skills */}
+      <div className="relative">
+        <input
+          name="skills"
+          defaultValue={user.skills?.join(", ")}
+          placeholder="e.g. React, Node.js, MongoDB"
+          className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-purple-600 transition"
+        />
+        <label className="absolute left-0 top-1 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1 peer-focus:text-sm peer-focus:text-purple-600">
+          Skills (comma-separated)
+        </label>
+      </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="goals">
-              Goals (comma separated)
-            </label>
-            <textarea
-              id="goals"
-              name="goals"
-              defaultValue={user.goals?.join(", ")}
-              className="w-full p-2 border rounded"
-              rows={2}
-              required
-            />
-            <p className="text-sm text-gray-500 mt-1">Example: Improve product design skills, Learn marketing strategies</p>
-          </div>
+      {/* Goals */}
+      <div className="relative">
+        <input
+          name="goals"
+          defaultValue={user.goals?.join(", ")}
+          placeholder="e.g. Learn TypeScript, Improve UI Design"
+          className="peer w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-purple-600 transition"
+        />
+        <label className="absolute left-0 top-1 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-1 peer-focus:text-sm peer-focus:text-purple-600">
+          Goals (comma-separated)
+        </label>
+      </div>
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-            >
-              Save Profile
-            </button>
-          </div>
-        </Form>
-      </main>
-    </div>
+      {/* Button */}
+      <button
+        type="submit"
+        className="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-md transition"
+      >
+        Save Changes
+      </button>
+
+      {/* Alerts */}
+      {actionData?.success && (
+        <p className="text-green-600 text-sm text-center">Profile updated successfully!</p>
+      )}
+      {actionData?.error && (
+        <p className="text-red-600 text-sm text-center">{actionData.error}</p>
+      )}
+    </Form>
+  </div>
+</div>
   );
 }
