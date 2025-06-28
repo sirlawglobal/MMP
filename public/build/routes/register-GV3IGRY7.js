@@ -7,12 +7,12 @@ import {
   Form,
   useActionData,
   useLoaderData
-} from "/build/_shared/chunk-UR3BQTMW.js";
-import "/build/_shared/chunk-U4FRFQSK.js";
+} from "/build/_shared/chunk-NGNCTJQR.js";
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
 import "/build/_shared/chunk-UWV35TSL.js";
+import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
 } from "/build/_shared/chunk-XGOTYLZ5.js";
@@ -172,4 +172,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   RegisterPage as default
 };
-//# sourceMappingURL=/build/routes/register-GF3FDM53.js.map
+//# sourceMappingURL=/build/routes/register-GV3IGRY7.js.map

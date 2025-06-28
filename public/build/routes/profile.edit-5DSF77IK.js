@@ -7,12 +7,12 @@ import {
   Form,
   useActionData,
   useLoaderData
-} from "/build/_shared/chunk-UR3BQTMW.js";
-import "/build/_shared/chunk-U4FRFQSK.js";
+} from "/build/_shared/chunk-NGNCTJQR.js";
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
 import "/build/_shared/chunk-UWV35TSL.js";
+import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
 } from "/build/_shared/chunk-XGOTYLZ5.js";
@@ -44,7 +44,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\profile.edit.tsx"
   );
-  import.meta.hot.lastModified = "1751052376076.9854";
+  import.meta.hot.lastModified = "1751052376546.9355";
 }
 function EditProfile() {
   _s();
@@ -163,4 +163,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   EditProfile as default
 };
-//# sourceMappingURL=/build/routes/profile.edit-QU3VGUPY.js.map
+//# sourceMappingURL=/build/routes/profile.edit-5DSF77IK.js.map

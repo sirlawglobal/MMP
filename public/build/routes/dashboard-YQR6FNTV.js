@@ -6,12 +6,12 @@ import {
 import {
   Link,
   useLoaderData
-} from "/build/_shared/chunk-UR3BQTMW.js";
-import "/build/_shared/chunk-U4FRFQSK.js";
+} from "/build/_shared/chunk-NGNCTJQR.js";
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
 import "/build/_shared/chunk-UWV35TSL.js";
+import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
 } from "/build/_shared/chunk-XGOTYLZ5.js";
@@ -43,7 +43,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\dashboard.tsx"
   );
-  import.meta.hot.lastModified = "1750987804448.4001";
+  import.meta.hot.lastModified = "1750987804608.0403";
 }
 var getStats = (role) => {
   switch (role) {
@@ -323,4 +323,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   Dashboard as default
 };
-//# sourceMappingURL=/build/routes/dashboard-EIBEVXGC.js.map
+//# sourceMappingURL=/build/routes/dashboard-YQR6FNTV.js.map
