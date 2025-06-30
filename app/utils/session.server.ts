@@ -1,35 +1,26 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 
-// You should replace this with a real secret from your environment in production
-const secret = process.env.SESSION_SECRET || "your-secret-key";
-
-export const sessionStorage = createCookieSessionStorage({
+const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
-    secrets: [secret],
-    sameSite: "lax",
-    path: "/",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secrets: [process.env.SESSION_SECRET || "s3cr3t"], // Fallback secret for development
+    secure: process.env.NODE_ENV === "production", // Secure cookies in production
+    httpOnly: true, // Prevent client-side access to cookies
+    maxAge: 60 * 60 * 24 * 7, // 1 week expiration
+    sameSite: "lax", // CSRF protection
+    path: "/", // Cookie available across all routes
   },
 });
 
-// Get session from the request
-// export function getSession(request: Request) {
-//   return sessionStorage.getSession(request.headers.get("Cookie"));
-// }
-
 export async function getSession(request: Request) {
-  const cookieHeader = request?.headers?.get("Cookie") ?? "";
-  return sessionStorage.getSession(cookieHeader);
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
 }
 
-// Destroy session for logout
-export function destroySession(session: Awaited<ReturnType<typeof getSession>>) {
-  return sessionStorage.destroySession(session);
-}
-
-// Commit session after changes (e.g., login)
-export function commitSession(session: Awaited<ReturnType<typeof getSession>>) {
+export async function commitSession(session: any) {
   return sessionStorage.commitSession(session);
+}
+
+export async function destroySession(session: any) {
+  return sessionStorage.destroySession(session);
 }

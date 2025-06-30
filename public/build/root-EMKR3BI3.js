@@ -11,12 +11,12 @@ import {
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
-import "/build/_shared/chunk-UWV35TSL.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
 } from "/build/_shared/chunk-XGOTYLZ5.js";
 import "/build/_shared/chunk-7M6SC7J5.js";
+import "/build/_shared/chunk-UWV35TSL.js";
 import {
   __commonJS,
   __toESM
@@ -37,7 +37,7 @@ var require_auth = __commonJS({
 });
 
 // app/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-KZRT6RPW.css";
+var tailwind_default = "/build/_assets/tailwind-JPZZITIE.css";
 
 // app/components/Layout.tsx
 var import_jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
@@ -59,7 +59,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\components\\Layout.tsx"
   );
-  import.meta.hot.lastModified = "1750988578006.724";
+  import.meta.hot.lastModified = "1751226742883.5454";
 }
 function Layout({
   children,
@@ -81,16 +81,21 @@ function Layout({
       columnNumber: 12
     }, this);
   }
-  const commonNavItems = [{
-    name: "Dashboard",
-    path: "/dashboard"
-  }, {
-    name: "Profile",
-    path: "/profile/edit"
-  }, {
-    name: "Sessions",
-    path: `/${role === "mentor" ? "sessions" : "my-sessions"}`
-  }];
+  const commonNavItems = [
+    {
+      name: "Dashboard",
+      path: "/dashboard"
+    },
+    {
+      name: "Profile",
+      path: "/profile/edit"
+    },
+    {
+      name: "Sessions",
+      path: `/${role === "mentor" ? "sessions" : role === "admin" ? "admin/sessions" : "my-sessions"}`
+    }
+    // Updated for admin
+  ];
   const roleSpecificNavItems = {
     admin: [{
       name: "Users",
@@ -123,80 +128,80 @@ function Layout({
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "flex items-center space-x-3 mb-8", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-700 font-bold", children: user.name?.charAt(0).toUpperCase() || "U" }, void 0, false, {
           fileName: "app/components/Layout.tsx",
-          lineNumber: 79,
+          lineNumber: 80,
           columnNumber: 11
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "text-lg font-semibold", children: user.name || "User" }, void 0, false, {
             fileName: "app/components/Layout.tsx",
-            lineNumber: 83,
+            lineNumber: 84,
             columnNumber: 13
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, { to: "/profile/edit", className: "text-xs text-purple-200 hover:underline block", children: "Edit Profile" }, void 0, false, {
             fileName: "app/components/Layout.tsx",
-            lineNumber: 84,
+            lineNumber: 85,
             columnNumber: 13
           }, this)
         ] }, void 0, true, {
           fileName: "app/components/Layout.tsx",
-          lineNumber: 82,
+          lineNumber: 83,
           columnNumber: 11
         }, this)
       ] }, void 0, true, {
         fileName: "app/components/Layout.tsx",
-        lineNumber: 78,
+        lineNumber: 79,
         columnNumber: 9
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("nav", { className: "flex flex-col gap-2 mb-6", children: allNavItems.map((item) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, { to: item.path, className: `px-3 py-2 rounded transition-colors ${currentPath === item.path ? "bg-purple-800 font-semibold" : "hover:bg-purple-600"}`, children: item.name }, item.name, false, {
         fileName: "app/components/Layout.tsx",
-        lineNumber: 91,
+        lineNumber: 92,
         columnNumber: 36
       }, this)) }, void 0, false, {
         fileName: "app/components/Layout.tsx",
-        lineNumber: 90,
+        lineNumber: 91,
         columnNumber: 9
       }, this),
       role === "admin" && /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, { to: "/register", className: "block hover:bg-green-600 px-3 py-2 rounded text-green-200 font-semibold transition-colors", children: "+ Add User" }, void 0, false, {
         fileName: "app/components/Layout.tsx",
-        lineNumber: 97,
+        lineNumber: 98,
         columnNumber: 30
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "mt-auto", children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Link, { to: "/logout", className: "block hover:bg-red-600 px-3 py-2 rounded text-red-200 font-semibold transition-colors", children: "Logout" }, void 0, false, {
           fileName: "app/components/Layout.tsx",
-          lineNumber: 102,
+          lineNumber: 103,
           columnNumber: 11
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("div", { className: "text-center text-xs opacity-80 mt-2", children: [
           "Logged in as: ",
           /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "capitalize", children: role }, void 0, false, {
             fileName: "app/components/Layout.tsx",
-            lineNumber: 106,
+            lineNumber: 107,
             columnNumber: 27
           }, this)
         ] }, void 0, true, {
           fileName: "app/components/Layout.tsx",
-          lineNumber: 105,
+          lineNumber: 106,
           columnNumber: 11
         }, this)
       ] }, void 0, true, {
         fileName: "app/components/Layout.tsx",
-        lineNumber: 101,
+        lineNumber: 102,
         columnNumber: 9
       }, this)
     ] }, void 0, true, {
       fileName: "app/components/Layout.tsx",
-      lineNumber: 77,
+      lineNumber: 78,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("main", { className: "flex-1 overflow-auto p-6", children }, void 0, false, {
       fileName: "app/components/Layout.tsx",
-      lineNumber: 112,
+      lineNumber: 113,
       columnNumber: 7
     }, this)
   ] }, void 0, true, {
     fileName: "app/components/Layout.tsx",
-    lineNumber: 75,
+    lineNumber: 76,
     columnNumber: 10
   }, this);
 }
@@ -305,4 +310,4 @@ export {
   App as default,
   links
 };
-//# sourceMappingURL=/build/root-7K2AHLUO.js.map
+//# sourceMappingURL=/build/root-EMKR3BI3.js.map

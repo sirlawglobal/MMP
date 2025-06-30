@@ -11,12 +11,12 @@ import {
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
-import "/build/_shared/chunk-UWV35TSL.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
 } from "/build/_shared/chunk-XGOTYLZ5.js";
 import "/build/_shared/chunk-7M6SC7J5.js";
+import "/build/_shared/chunk-UWV35TSL.js";
 import {
   __toESM
 } from "/build/_shared/chunk-PNG5AS42.js";
@@ -45,7 +45,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\register.tsx"
   );
-  import.meta.hot.lastModified = "1750988748023.5217";
+  import.meta.hot.lastModified = "1751221948182.5203";
 }
 function RegisterPage() {
   _s();
@@ -172,4 +172,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   RegisterPage as default
 };
-//# sourceMappingURL=/build/routes/register-GV3IGRY7.js.map
+//# sourceMappingURL=/build/routes/register-T722SWA4.js.map

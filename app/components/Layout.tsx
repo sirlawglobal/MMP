@@ -1,4 +1,4 @@
-// app/components/Layout.tsx
+// File: app/components/Layout.tsx (partial update)
 import { Link, useMatches } from "@remix-run/react";
 import type { User } from "~/utils/auth.server";
 
@@ -26,7 +26,7 @@ export function Layout({ children, user, role }: LayoutProps) {
   const commonNavItems = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "Profile", path: "/profile/edit" },
-    { name: "Sessions", path: `/${role === "mentor" ? "sessions" : "my-sessions"}` },
+    { name: "Sessions", path: `/${role === "mentor" ? "sessions" : role === "admin" ? "admin/sessions" : "my-sessions"}` }, // Updated for admin
   ];
 
   const roleSpecificNavItems: Record<UserRole, { name: string; path: string }[]> = {

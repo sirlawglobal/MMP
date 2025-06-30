@@ -7,7 +7,6 @@ import {
 import {
   createHotContext
 } from "/build/_shared/chunk-65SXMPWJ.js";
-import "/build/_shared/chunk-UWV35TSL.js";
 import "/build/_shared/chunk-U4FRFQSK.js";
 import {
   require_jsx_dev_runtime
@@ -15,6 +14,7 @@ import {
 import {
   require_react
 } from "/build/_shared/chunk-7M6SC7J5.js";
+import "/build/_shared/chunk-UWV35TSL.js";
 import {
   __toESM
 } from "/build/_shared/chunk-PNG5AS42.js";
@@ -44,4 +44,4 @@ if (import.meta) {
     }, this)
   );
 });
-//# sourceMappingURL=/build/entry.client-JJC2TIRM.js.map
+//# sourceMappingURL=/build/entry.client-G6QPQ6L2.js.map

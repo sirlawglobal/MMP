@@ -1,7 +1,7 @@
 import { json, redirect, type ActionFunction, type LoaderFunction } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import { loginUser } from "~/utils/auth.server";
-import { getSession, sessionStorage } from "~/utils/session.server";
+import { getSession, commitSession } from "~/utils/session.server";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 
 type ActionData = {
@@ -36,13 +36,15 @@ export const action: ActionFunction = async ({ request }) => {
 
   return redirect("/dashboard", {
     headers: {
-      "Set-Cookie": await sessionStorage.commitSession(session),
+      "Set-Cookie": await commitSession(session),
     },
   });
 };
 
 export default function LoginPage() {
   const actionData = useActionData<ActionData>();
+  const transition = useNavigation(); // Track form submission state
+  const isSubmitting = transition.state === "submitting"; // Check if form is submitting
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 px-4">
@@ -59,6 +61,7 @@ export default function LoginPage() {
               placeholder="Email"
               required
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isSubmitting} // Disable input during submission
             />
           </div>
 
@@ -70,6 +73,7 @@ export default function LoginPage() {
               placeholder="Password"
               required
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isSubmitting} // Disable input during submission
             />
           </div>
 
@@ -79,9 +83,38 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-300"
+            className={`w-full bg-blue-600 text-white py-2 rounded-md transition duration-300 flex items-center justify-center ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+            }`}
+            disabled={isSubmitting} // Disable button during submission
           >
-            Login
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
         </Form>
 

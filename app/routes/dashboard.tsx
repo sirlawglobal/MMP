@@ -1,28 +1,42 @@
 import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import { getSession } from "~/utils/session.server";
+import { getSession } from "~/utils/session.server"; // User session management
+import { getSessionsForUser } from "~/utils/sessions.server"; // Session data management
 import { getUserRole, getCurrentUser } from "~/utils/auth.server";
 import type { User } from "~/utils/auth.server";
+import type { SessionData } from "~/utils/sessions.server";
+
+// Type definitions
+type StatCard = {
+  title: string;
+  value: string;
+  link: string;
+  color: string;
+};
+
+type Activity = {
+  title: string;
+  description: string;
+  action: string;
+  link: string;
+};
+
+type QuickAction = {
+  title: string;
+  link: string;
+  color: string;
+};
+
+type SessionStatus = "upcoming" | "completed" | "cancelled";
 
 type DashboardData = {
   role: string;
   user: User;
+  upcomingSessions: SessionData[];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const session = await getSession(request);
-  const email = session.get("email");
-
-  if (!email) return redirect("/login");
-
-  const role = await getUserRole(email);
-  const user = await getCurrentUser(email);
-  if (!user) return redirect("/login");
-
-  return json<DashboardData>({ role, user });
-};
-
-const getStats = (role: string) => {
+// Utility functions
+const getStats = (role: string): StatCard[] => {
   switch (role) {
     case "admin":
       return [
@@ -47,7 +61,7 @@ const getStats = (role: string) => {
   }
 };
 
-const getRecentActivities = (role: string) => {
+const getRecentActivities = (role: string): Activity[] => {
   switch (role) {
     case "admin":
       return [
@@ -69,7 +83,7 @@ const getRecentActivities = (role: string) => {
   }
 };
 
-const getQuickActions = (role: string) => {
+const getQuickActions = (role: string): QuickAction[] => {
   switch (role) {
     case "admin":
       return [
@@ -94,15 +108,48 @@ const getQuickActions = (role: string) => {
   }
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request);
+  const email = session.get("email");
+
+  if (!email) return redirect("/login");
+
+  const role = await getUserRole(email);
+  const user = await getCurrentUser(email);
+  if (!user) return redirect("/login");
+
+  // Fetch sessions based on user role, excluding cancelled, limited to 5
+  const upcomingSessions = await getSessionsForUser(user.id, role, "upcoming");
+
+  return json<DashboardData>({ role, user, upcomingSessions: upcomingSessions.slice(0, 5) });
+};
+
 export default function Dashboard() {
-  const { role, user } = useLoaderData<DashboardData>();
+  const { role, user, upcomingSessions } = useLoaderData<DashboardData>();
 
   const stats = getStats(role);
   const activities = getRecentActivities(role);
   const quickActions = getQuickActions(role);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const needsFeedback = (session: SessionData) => {
+    return (
+      role === "mentee" &&
+      session.status === "completed" &&
+      (!session.feedback || !session.feedback.rating)
+    );
+  };
+
   return (
-    <>
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-semibold mb-6 text-purple-800">Dashboard</h1>
 
       {/* Welcome */}
@@ -129,6 +176,85 @@ export default function Dashboard() {
             <p className="text-2xl font-bold">{stat.value}</p>
           </Link>
         ))}
+      </div>
+
+      {/* Upcoming Sessions */}
+      <div className="bg-white rounded-lg p-6 shadow mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold text-purple-800">Your Sessions</h2>
+          <Link
+            to={role === "mentor" ? "/sessions" : role === "admin" ? "/admin/sessions" : "/my-sessions"}
+            className="text-sm text-purple-600 hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+
+        {upcomingSessions.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600 mb-4">No sessions scheduled yet.</p>
+            {role === "mentee" && (
+              <Link
+                to="/mentors"
+                className="inline-block bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+              >
+                Find a Mentor
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {upcomingSessions.map((session) => (
+              <div key={session.id} className="border-b border-gray-100 pb-4 last:border-0">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-medium text-gray-800">
+                      {role === "mentor" ? `With ${session.mentee.name}` : `With ${session.mentor.name}`}
+                    </h3>
+                    <p className="text-gray-600">
+                      {formatDate(session.date.toString())}, {session.startTime}-{session.endTime}
+                    </p>
+                    <span
+                      className={`inline-block mt-1 px-2 py-1 text-xs rounded ${
+                        session.status === "upcoming"
+                          ? "bg-blue-100 text-blue-800"
+                          : session.status === "completed"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
+                    </span>
+                  </div>
+                  <div className="flex space-x-2">
+                    {session.status === "upcoming" && (
+                      <Link
+                        to={`/sessions/${session.id}/cancel`}
+                        className="text-red-600 text-sm hover:underline"
+                      >
+                        Cancel
+                      </Link>
+                    )}
+                    {needsFeedback(session) && (
+                      <Link
+                        to={`/sessions/${session.id}/feedback`}
+                        className="text-purple-600 text-sm hover:underline"
+                      >
+                        Feedback
+                      </Link>
+                    )}
+                    <Link
+                      to={`/sessions/${session.id}`}
+                      className="text-blue-600 text-sm hover:underline"
+                    >
+                      Details
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Recent Activities */}
@@ -162,6 +288,6 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
