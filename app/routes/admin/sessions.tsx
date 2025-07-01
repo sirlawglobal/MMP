@@ -1,8 +1,8 @@
 import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
-import { getSession } from "~/utils/session.server"; // User session management
-import { getSessionsForUser } from "~/utils/sessions.server"; // Session data management
+import { getSession } from "~/utils/session.server";
 import { getUserRole, getCurrentUser } from "~/utils/auth.server";
+import { getAllSessions } from "~/utils/sessions.server";
 import type { User } from "~/utils/auth.server";
 import type { SessionData } from "~/utils/sessions.server";
 
@@ -10,28 +10,44 @@ type LoaderData = {
   user: User;
   role: string;
   sessions: SessionData[];
+  error?: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  console.log("Loading /admin/sessions");
   const session = await getSession(request);
   const email = session.get("email");
-  if (!email) return redirect("/login");
+  console.log("Email from session:", email);
+  if (!email) {
+    console.log("No email, redirecting to /login");
+    return redirect("/login");
+  }
 
   const user = await getCurrentUser(email);
   const role = await getUserRole(email);
-  if (!user) return redirect("/login");
-
-  if (role !== "admin") {
-    return redirect("/dashboard"); // Only admins should access /admin/sessions
+  console.log("User:", user, "Role:", role);
+  if (!user) {
+    console.log("No user, redirecting to /login");
+    return redirect("/login");
   }
 
-  const sessions = await getSessionsForUser(user.id, role); // Admin sees all sessions
+  if (role !== "admin") {
+    console.log(`Role is ${role}, redirecting to /dashboard`);
+    return redirect("/dashboard");
+  }
 
-  return json<LoaderData>({ user, role, sessions });
+  try {
+    const sessions = await getAllSessions();
+    console.log("Sessions fetched:", sessions.length);
+    return json<LoaderData>({ user, role, sessions });
+  } catch (error) {
+    console.error("Error fetching sessions:", error);
+    return json<LoaderData>({ user, role, sessions: [], error: "Failed to load sessions" }, { status: 500 });
+  }
 };
 
 export default function AdminSessions() {
-  const { user, role, sessions } = useLoaderData<LoaderData>();
+  const { user, role, sessions, error } = useLoaderData<LoaderData>();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -46,7 +62,9 @@ export default function AdminSessions() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-semibold mb-6 text-purple-800">All Sessions</h1>
       <div className="bg-white rounded-lg p-6 shadow">
-        {sessions.length === 0 ? (
+        {error ? (
+          <p className="text-red-600">{error}</p>
+        ) : sessions.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-600">No sessions scheduled yet.</p>
           </div>

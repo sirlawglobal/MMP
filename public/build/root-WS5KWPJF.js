@@ -37,7 +37,7 @@ var require_auth = __commonJS({
 });
 
 // app/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-JPZZITIE.css";
+var tailwind_default = "/build/_assets/tailwind-UELOCUHB.css";
 
 // app/components/Layout.tsx
 var import_jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
@@ -59,7 +59,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\components\\Layout.tsx"
   );
-  import.meta.hot.lastModified = "1751226742883.5454";
+  import.meta.hot.lastModified = "1751226743129.2925";
 }
 function Layout({
   children,
@@ -310,4 +310,4 @@ export {
   App as default,
   links
 };
-//# sourceMappingURL=/build/root-EMKR3BI3.js.map
+//# sourceMappingURL=/build/root-WS5KWPJF.js.map

@@ -44,7 +44,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\profile.edit.tsx"
   );
-  import.meta.hot.lastModified = "1751221948182.5203";
+  import.meta.hot.lastModified = "1751228274712.7146";
 }
 function EditProfile() {
   _s();
@@ -163,4 +163,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   EditProfile as default
 };
-//# sourceMappingURL=/build/routes/profile.edit-RHKZLYXX.js.map
+//# sourceMappingURL=/build/routes/profile.edit-YOLFBJKB.js.map

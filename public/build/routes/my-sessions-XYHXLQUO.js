@@ -47,7 +47,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\my-sessions.tsx"
   );
-  import.meta.hot.lastModified = "1751227119722.2732";
+  import.meta.hot.lastModified = "1751227120429.871";
 }
 function MySessions() {
   _s();
@@ -174,4 +174,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   MySessions as default
 };
-//# sourceMappingURL=/build/routes/my-sessions-W5C2LBFE.js.map
+//# sourceMappingURL=/build/routes/my-sessions-XYHXLQUO.js.map

@@ -31,14 +31,19 @@ export async function createSession({
   endTime: string;
 }): Promise<SessionData | null> {
   await connectDB();
+
+  // Validate mentor and mentee exist and have correct roles
   const mentor = await User.findById(mentorId);
   const mentee = await User.findById(menteeId);
   if (!mentor || mentor.role !== "mentor" || !mentee || mentee.role !== "mentee") {
     return null;
   }
+
+  // Basic validation for time
   if (startTime >= endTime) {
     throw new Error("End time must be after start time");
   }
+
   const newSession = new Session({
     mentor: mentorId,
     mentee: menteeId,
@@ -47,11 +52,15 @@ export async function createSession({
     endTime,
     status: "upcoming",
   });
+
   await newSession.save();
+
   const populatedSession = await Session.findById(newSession._id)
     .populate("mentor", "name")
     .populate("mentee", "name");
+
   if (!populatedSession) return null;
+
   return formatSession(populatedSession);
 }
 
@@ -61,32 +70,23 @@ export async function getSessionsForUser(
   status?: string
 ): Promise<SessionData[]> {
   await connectDB();
+
   const query: any = {};
   if (role === "mentor") {
     query.mentor = userId;
   } else if (role === "mentee") {
     query.mentee = userId;
   }
-  if (status) {
-    query.status = status;
-  }
-  const sessions = await Session.find(query)
-    .populate("mentor", "name")
-    .populate("mentee", "name")
-    .sort({ date: 1 });
-  return sessions.map(formatSession);
-}
 
-export async function getAllSessions(status?: string): Promise<SessionData[]> {
-  await connectDB();
-  const query: any = {};
   if (status) {
     query.status = status;
   }
+
   const sessions = await Session.find(query)
     .populate("mentor", "name")
     .populate("mentee", "name")
     .sort({ date: 1 });
+
   return sessions.map(formatSession);
 }
 

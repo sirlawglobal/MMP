@@ -427,6 +427,9 @@ video {
 .mr-1 {
   margin-right: .25rem;
 }
+.mr-2 {
+  margin-right: .5rem;
+}
 .mr-3 {
   margin-right: .75rem;
 }
@@ -459,12 +462,6 @@ video {
 }
 .mt-auto {
   margin-top: auto;
-}
-.mr-2 {
-  margin-right: .5rem;
-}
-.ml-2 {
-  margin-left: .5rem;
 }
 .block {
   display: block;
@@ -788,16 +785,16 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(107 33 168 / var(--tw-bg-opacity, 1));
 }
+.bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 .bg-white\/80 {
   background-color: #fffc;
-}
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
 }
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -1122,20 +1119,20 @@ video {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
 }
-.opacity-70 {
-  opacity: .7;
-}
-.opacity-80 {
-  opacity: .8;
-}
 .opacity-25 {
   opacity: .25;
 }
 .opacity-50 {
   opacity: .5;
 }
+.opacity-70 {
+  opacity: .7;
+}
 .opacity-75 {
   opacity: .75;
+}
+.opacity-80 {
+  opacity: .8;
 }
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
@@ -1431,4 +1428,4 @@ body {
     display: block;
   }
 }
-/*# sourceMappingURL=/build/_assets/tailwind-MSQT5JTZ.css.map */
+/*# sourceMappingURL=/build/_assets/tailwind-ES4QAIPH.css.map */

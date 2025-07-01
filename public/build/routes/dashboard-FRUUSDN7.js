@@ -47,7 +47,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\dashboard.tsx"
   );
-  import.meta.hot.lastModified = "1751227049218.3694";
+  import.meta.hot.lastModified = "1751228364747.6165";
 }
 var getStats = (role) => {
   switch (role) {
@@ -438,4 +438,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   Dashboard as default
 };
-//# sourceMappingURL=/build/routes/dashboard-A2VZFBW6.js.map
+//# sourceMappingURL=/build/routes/dashboard-FRUUSDN7.js.map
