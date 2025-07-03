@@ -1,6 +1,11 @@
 // app/utils/auth.server.ts
 import { connectDB } from "./db.server";
 import { User } from "~/models/User";
+// import { Request } from '@remix-run/node';
+// Add this to your existing auth.server.ts
+import { redirect } from "@remix-run/node";
+// Add to the top of auth.server.ts
+import { getSession } from "./session.server"; // Make sure this path is correct
 
 export type User = {
   id: string;
@@ -72,4 +77,26 @@ function formatUser(user: any): User {
     skills: user.skills,
     goals: user.goals,
   };
+}
+
+
+
+export async function requireAdmin(request: Request): Promise<User> {
+  const session = await getSession(request);
+  const email = session.get("email");
+  
+  if (!email) {
+    throw redirect("/login");
+  }
+
+  const user = await getCurrentUser(email);
+  if (!user) {
+    throw redirect("/login");
+  }
+
+  if (user.role !== "admin") {
+    throw redirect("/dashboard");
+  }
+
+  return user;
 }

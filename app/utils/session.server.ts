@@ -1,3 +1,6 @@
+
+// app/utils/session.server.ts
+
 import { createCookieSessionStorage } from "@remix-run/node";
 
 const sessionStorage = createCookieSessionStorage({

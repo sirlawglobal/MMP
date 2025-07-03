@@ -26,22 +26,24 @@ export function Layout({ children, user, role }: LayoutProps) {
   const commonNavItems = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "Profile", path: "/profile/edit" },
-    { name: "Sessions", path: `/${role === "mentor" ? "sessions" : role === "admin" ? "admin/sessions" : "my-sessions"}` }, // Updated for admin
+    { name: "Sessions", path: `/${role === "mentor" ? "sessions" : role === "admin" ? "admin_sessions" : "my-sessions"}` }, // Updated for admin
   ];
 
   const roleSpecificNavItems: Record<UserRole, { name: string; path: string }[]> = {
     admin: [
       { name: "Users", path: "/admin/users" },
       { name: "Matches", path: "/admin/matches" },
-      { name: "All Sessions", path: "/admin/sessions" },
+      { name: "All Sessions", path: "admin_sessions" },
     ],
     mentor: [
       { name: "Availability", path: "/availability" },
-      { name: "Requests", path: "/requests" },
+      // { name: "Requests", path: "/requests" },
+       { name: "Requests", path: "/requests/received" },
     ],
     mentee: [
       { name: "Find Mentors", path: "/mentors" },
-      { name: "My Requests", path: "/my-requests" },
+      // { name: "My Requests", path: "/my-requests" },
+      { name: "My Requests", path: "/requests/sent" },
     ],
   };
 
