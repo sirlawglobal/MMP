@@ -25,18 +25,37 @@ export async function createRequest({ menteeId, mentorId, message }: {
 
 export async function getSentRequests(menteeId: string) {
   await connectDB();
-  return Request.find({ menteeId })
-    .populate('mentor', 'name email bio skills')
+  const requests = await Request.find({ menteeId })
+    .populate('mentorId', 'name email bio skills')
     .sort({ createdAt: -1 })
     .lean();
+
+  return requests.map((req) => ({
+    ...req,
+    mentor: req.mentorId, // alias it for frontend clarity
+  }));
 }
+
+
+
+// export async function getSentRequests(menteeId: string) {
+//   await connectDB();
+//   return Request.find({ menteeId })
+//     .populate('mentorId', 'name email bio skills')
+//     .sort({ createdAt: -1 })
+//     .lean();
+// }
 
 export async function getReceivedRequests(mentorId: string) {
   await connectDB();
-  return Request.find({ mentorId, status: 'PENDING' })
-    .populate('mentee', 'name email bio goals')
-    .sort({ createdAt: -1 })
-    .lean();
+ return (await Request.find({ mentorId, status: 'PENDING' })
+  .populate('menteeId', 'name email bio goals')
+  .sort({ createdAt: -1 })
+  .lean()).map((r) => ({
+    ...r,
+    mentee: r.menteeId,
+  }));
+
 }
 
 export async function updateRequestStatus(

@@ -1,3 +1,5 @@
+
+// app/routes/dashboard.ts
 import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import { getSession } from "~/utils/session.server"; // User session management
@@ -111,6 +113,8 @@ const getQuickActions = (role: string): QuickAction[] => {
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);
   const email = session.get("email");
+  // const userful = session.get("user");
+  // console.log('userful',userful)
 
   if (!email) return redirect("/login");
 

@@ -2,7 +2,7 @@
 
 import { json, redirect, type ActionFunction, type LoaderFunction } from "@remix-run/node";
 import { Form, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
-import { loginUser } from "~/utils/auth.server";
+import { loginUser, getUserByEmail} from "~/utils/auth.server";
 import { getSession, commitSession } from "~/utils/session.server";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 
@@ -33,8 +33,41 @@ export const action: ActionFunction = async ({ request }) => {
     return json<ActionData>({ error: "Invalid email or password" }, { status: 401 });
   }
 
-  const session = await getSession(request);
-  session.set("email", user.email);
+  // const session = await getSession(request);
+  // session.set("email", user.email);
+
+const fullUser = await getUserByEmail(user.email);
+
+
+if (!fullUser) {
+  return json<ActionData>({ error: "User not found" }, { status: 404 });
+}
+
+const session = await getSession(request);
+console.log('fullUser',fullUser)
+
+
+session.set("userId", fullUser.id);
+session.set("name", fullUser.name);
+session.set("email", fullUser.email);
+session.set("role", fullUser.role);
+// console.log('userid', userId)
+
+// session.set("user", {
+//   id: fullUser.id,
+//   name: fullUser.name,
+//   email: fullUser.email,
+//   role: fullUser.role,
+// });
+//   // session.set("email", user.email);
+
+//     console.log('Session data after setting user:', session.data);
+//     console.log('Session email after setting user:', session.data.user.email);
+//     console.log('Session name after setting user:', session.data.user.name);
+//     console.log('Session name after setting user:', session.data.user.id);
+// session.set("userId", user.id);   // ✅ Add this
+// session.set("user", user);
+
 
   return redirect("/dashboard", {
     headers: {

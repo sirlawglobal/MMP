@@ -3,8 +3,9 @@ import { json } from "@remix-run/node";
 import { useLoaderData, Form } from "@remix-run/react";
 import { getSession } from "~/utils/session.server";
 import { getReceivedRequests } from "~/utils/requests.server";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }:LoaderFunctionArgs) => {
   const session = await getSession(request);
   const userId = session.get("userId");
   

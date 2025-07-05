@@ -100,3 +100,8 @@ export async function requireAdmin(request: Request): Promise<User> {
 
   return user;
 }
+
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const rawUser = await User.findOne({ email }).lean();
+  return rawUser ? formatUser(rawUser) : null;
+}

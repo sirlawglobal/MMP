@@ -1,3 +1,5 @@
+// models/session.tsx
+
 import mongoose, { Schema } from "mongoose";
 
 const sessionSchema = new Schema({

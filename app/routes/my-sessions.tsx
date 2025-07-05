@@ -1,3 +1,5 @@
+//route/my-session.tsx
+
 import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import { getSession } from "~/utils/session.server"; // User session management
