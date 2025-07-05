@@ -50,7 +50,7 @@ if (import.meta) {
     //@ts-expect-error
     "app\\routes\\requests.received.tsx"
   );
-  import.meta.hot.lastModified = "1751512426765.2554";
+  import.meta.hot.lastModified = "1751513997228.31";
 }
 function ReceivedRequests() {
   _s();
@@ -176,4 +176,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   ReceivedRequests as default
 };
-//# sourceMappingURL=/build/routes/requests.received-E2B5DRRO.js.map
+//# sourceMappingURL=/build/routes/requests.received-A277ODZU.js.map
